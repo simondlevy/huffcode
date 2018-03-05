@@ -1,15 +1,17 @@
 import numpy as np
+from pprint import pprint
 
 def huffcode(freqdic):
-
     '''
     Builds and returns a Huffman-code dictionary from a dictionary of
     letter frequencies
     '''
 
-    d = {}
+    pprint(freqdic)
 
-    return d
+    huffd = {}
+
+    return huffd
 
 def hufftext(filename):
     '''
@@ -20,18 +22,21 @@ def hufftext(filename):
     # Read in the entire text at once, converting it to lower-case
     text = open(filename).read().lower()
 
-    # Compute frequencies for the alphabetic characters
+    # Build dictionary of letter occurrence counts
+    d = {}
     for c in 'abcdefghijklmnopqrstuvwxz':
-        print(c)
+        d[c] = text.count(c)
 
-    # Build letter-frequency dictionary
-    freqdic = {}
+    # Convert the counts into frequencies
+    total = np.sum([d[c] for c in d.keys()])
+    d = {c: d[c]/total for c in d.keys()}
 
     # Return Huffman-code dictionary built from letter-frequency dictionary
-    return huffcode(freqdic)
+    return huffcode(d)
 
 if __name__ == '__main__':
 
+    # Call me Ishmael
     print(hufftext('mobydick.txt'))
 
     
