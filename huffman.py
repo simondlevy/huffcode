@@ -1,5 +1,6 @@
 import numpy as np
 from pprint import pprint
+import operator
 
 def huffcode(freqdic):
     '''
@@ -7,7 +8,10 @@ def huffcode(freqdic):
     letter frequencies
     '''
 
-    pprint(freqdic)
+    # Turn the dictionary into a priority queue
+    # https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value
+    pqueue = sorted(freqdic.items(), key=operator.itemgetter(1))
+    print(pqueue)
 
     huffd = {}
 
@@ -37,6 +41,6 @@ def hufftext(filename):
 if __name__ == '__main__':
 
     # Call me Ishmael
-    print(hufftext('mobydick.txt'))
+    pprint(hufftext('mobydick.txt'))
 
     
