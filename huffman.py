@@ -2,20 +2,58 @@ import numpy as np
 from pprint import pprint
 import operator
 
+class Node(object):
+
+    def __init__(self, label, freq):
+        
+        self.label = label
+        
+        self.freq = freq
+
+class LeafNode(Node):
+
+    def __init__(self, label, freq):
+        
+        Node.__init__(self, label, freq)
+
+    def __str__(self):
+
+        return self.label  + ':' + str(self.freq)
+
+class InternalNode(Node):
+    
+    def __init__(self, left, right):
+        
+        Node.__init__(self, left.label+right.label, left.freq+right.freq)
+        
+
 def huffcode(freqdic):
     '''
     Builds and returns a Huffman-code dictionary from a dictionary of
-    letter frequencies
+    letter frequencies, by running the "Alternative Description" algorithm
+    from Prof. Sprenkle's slide #38
     '''
 
-    # Turn the dictionary into a priority queue
+    # Create a leaf node for each symbol, labeled by its frequency, and add to a queue
     # https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value
-    pqueue = sorted(freqdic.items(), key=operator.itemgetter(1))
-    print(pqueue)
+    q = [LeafNode(label, freq) for label, freq in sorted(freqdic.items(), key=operator.itemgetter(1))]
 
-    huffd = {}
+    # While there is more than one node in the queue
+    while len(q) > 1:
 
-    return huffd
+        # Remove the two nodes of lowest frequency
+        n1,n2 = q[0],q[1]
+        q = q[2:]
+
+        print(n1)
+        
+        # Create a new internal node with these two nodes
+        # as children and with frequency equal to the sum
+        # of the two nodes' probabilities
+
+        break
+
+    return {}
 
 def hufftext(filename):
     '''
