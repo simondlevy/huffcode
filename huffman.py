@@ -50,9 +50,9 @@ def remove_lowest(q):
 
     
 
-def huffcode(freqdic):
+def hufftree(freqdic):
     '''
-    Builds and returns a Huffman-code dictionary from a dictionary of
+    Builds and returns a Huffman-code tree from a dictionary of
     letter frequencies, by running the "Alternative Description" algorithm
     from Prof. Sprenkle's slide #38
     '''
@@ -62,10 +62,6 @@ def huffcode(freqdic):
 
     # 2. While there is more than one node in the queue
     while len(q) > 1:
-
-        for n in q:
-            print(n)
-        print('')
 
         # a) Remove the two nodes of lowest frequency
         node1,q = remove_lowest(q)
@@ -79,8 +75,8 @@ def huffcode(freqdic):
         # c) Add the new node to the queue
         q.append(node)
 
-
-    return {}
+    # 3. The remaining node is the tree's root node
+    return q[0]
 
 def hufftext(filename):
     '''
@@ -96,12 +92,14 @@ def hufftext(filename):
     for c in 'abcdefghijklmnopqrstuvwxz':
         d[c] = text.count(c)
 
-    # Convert the counts into frequencies
+    # Convert the counts into a dictionary {label:frequency}
     total = np.sum([d[c] for c in d.keys()])
     d = {c: d[c]/total for c in d.keys()}
 
-    # Return Huffman-code dictionary built from letter-frequency dictionary
-    return huffcode(d)
+    # Convert the dictionary into a Huffman-code tree
+    t = hufftree(d)
+
+    print(t)
 
 if __name__ == '__main__':
 
