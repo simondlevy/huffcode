@@ -1,55 +1,24 @@
-import numpy as np
-from pprint import pprint
-import operator
+'''
+Huffman Code implementation and example
+Simon D. Levy
+CSCI 211
+05 March 2018
+'''
 
-# Some classes supporting Huffman-code binary trees
+from numpy import sum
+from bintree import LeafNode, InternalNode
 
-class Node(object):
-
-    def __init__(self, label, freq):
-        
-        self.label = label
-        self.freq = freq
-
-    def __str__(self):
-
-        return self.label  + ':' + str(self.freq)
-    
-class LeafNode(Node):
-
-    def __init__(self, label, freq):
-        
-        Node.__init__(self, label, freq)
-        self.isleaf = True
-
-class InternalNode(Node):
-    
-    def __init__(self, left, right):
-        
-        Node.__init__(self, left.label+right.label, left.freq+right.freq)
-        self.left = left
-        self.right = right
-        self.isleaf = False
-
-    def __str__(self):
-
-        return Node.__str__(self) + " = " + self.left.label + ", " + self.right.label
-
-    def isleaf(self):
-
-        return False
-
-
-# Support for priority queue
-# XXX No muy pythonista!
 def remove_lowest(q):
-
+    '''
+    Removes lowest-valued node in a priority queue.
+    Returns the node and the modified queue.
+    '''
     fmin = 1.0
     pos = -1
     
     for n,k in zip(q, range(len(q))):
-        if n.freq < fmin:
-            fmin = n.freq
+        if n.value < fmin:
+            fmin = n.value
             pos = k
         
     return q[pos], q[:pos] + q[pos+1:]
@@ -103,15 +72,15 @@ def huffcode(c, t):
     return code
 
 
+if __name__ == '__main__':
 
-def hufftext(filename):
-    '''
-    Builds and returns a Huffman-code dictionary built from letters in
-    named text file
-    '''
+    import urllib.request
+
+    # Call me Ishmael
+    URL = 'http://home.wlu.edu/~levys/csci121w2018/data/mobydick.txt'
 
     # Read in the entire text at once, converting it to lower-case
-    text = open(filename).read().lower()
+    text = str(urllib.request.urlopen(URL).read().lower())
 
     # Build dictionary of letter occurrence counts
     d = {}
@@ -119,25 +88,15 @@ def hufftext(filename):
         d[c] = text.count(c)
 
     # Convert the counts into a dictionary {label:frequency}
-    total = np.sum([d[c] for c in d.keys()])
+    total = sum([d[c] for c in d.keys()])
     d = {c: d[c]/total for c in d.keys()}
 
     # Convert the dictionary into a Huffman-code tree
     t = hufftree(d)
 
     # Make a new dictionary from the Huffman-code tree
-    return {c:huffcode(c,t) for c in d.keys()}
-
-if __name__ == '__main__':
-
-    d = {'a':.32, 'b':.25, 'c':.20, 'd':.18, 'e':.05}
-
-    t = hufftree(d)
-
     for c in d.keys():
         print(c, huffcode(c, t))
 
-    # Call me Ishmael
-    #pprint(hufftext('mobydick.txt'))
 
     
