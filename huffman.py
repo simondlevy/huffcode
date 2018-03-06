@@ -94,10 +94,10 @@ def huffcode(c, t):
     while (not t.isleaf):
 
         if c in t.left.label:
-            code = [0] + code
+            code = code + [0]
             t = t.left
         else:
-            code = [1] + code
+            code = code + [1]
             t = t.right
         
     return code
@@ -130,7 +130,14 @@ def hufftext(filename):
 
 if __name__ == '__main__':
 
+    d = {'a':.32, 'b':.25, 'c':.20, 'd':.18, 'e':.05}
+
+    t = hufftree(d)
+
+    for c in d.keys():
+        print(c, huffcode(c, t))
+
     # Call me Ishmael
-    pprint(hufftext('mobydick.txt'))
+    #pprint(hufftext('mobydick.txt'))
 
     
