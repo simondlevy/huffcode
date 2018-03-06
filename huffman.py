@@ -31,7 +31,7 @@ class InternalNode(Node):
 
     def __str__(self):
 
-        return Node.__str__(self) + " = " + str(self.left) + ", " + str(self.right)
+        return Node.__str__(self) + " = " + self.left.label + ", " + self.right.label
 
 
 # Support for priority queue
@@ -63,6 +63,10 @@ def huffcode(freqdic):
     # 2. While there is more than one node in the queue
     while len(q) > 1:
 
+        for n in q:
+            print(n)
+        print('')
+
         # a) Remove the two nodes of lowest frequency
         node1,q = remove_lowest(q)
         node2,q = remove_lowest(q) 
@@ -75,10 +79,6 @@ def huffcode(freqdic):
         # c) Add the new node to the queue
         q.append(node)
 
-        for n in q:
-            print(n)
-
-        break
 
     return {}
 
