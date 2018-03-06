@@ -60,19 +60,12 @@ def huffcode(freqdic):
     # 1. Create a leaf node for each symbol, labeled by its frequency, and add to a queue
     q = [LeafNode(label, freqdic[label]) for label in freqdic.keys()]
 
-    for n in q:
-        print(n)
-    print("")
-
     # 2. While there is more than one node in the queue
     while len(q) > 1:
 
         # a) Remove the two nodes of lowest frequency
         node1,q = remove_lowest(q)
         node2,q = remove_lowest(q) 
-        print(node1)
-        print(node2)
-        return
         
         # b) Create a new internal node with these two nodes
         #    as children and with frequency equal to the sum
@@ -80,8 +73,10 @@ def huffcode(freqdic):
         node = InternalNode(node1, node2)
 
         # c) Add the new node to the queue
-        
-    
+        q.append(node)
+
+        for n in q:
+            print(n)
 
         break
 
