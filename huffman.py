@@ -63,10 +63,10 @@ def huffcode(c, t):
     while (not t.isleaf):
 
         if c in t.left.label:
-            code = code + [0]
+            code += [0]
             t = t.left
         else:
-            code = code + [1]
+            code += [1]
             t = t.right
         
     return code
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # Convert the dictionary into a Huffman-code tree
     t = hufftree(d)
 
-    # Make a new dictionary from the Huffman-code tree
+    # Look up the letters in the tree
     for c in d.keys():
         print(c, huffcode(c, t))
 
