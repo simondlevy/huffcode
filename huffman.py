@@ -2,30 +2,53 @@ import numpy as np
 from pprint import pprint
 import operator
 
+# Some classes supporting Huffman-code binary trees
+
 class Node(object):
 
     def __init__(self, label, freq):
         
         self.label = label
-        
         self.freq = freq
 
+    def __str__(self):
+
+        return self.label  + ':' + str(self.freq)
+    
 class LeafNode(Node):
 
     def __init__(self, label, freq):
         
         Node.__init__(self, label, freq)
 
-    def __str__(self):
-
-        return self.label  + ':' + str(self.freq)
-
 class InternalNode(Node):
     
     def __init__(self, left, right):
         
         Node.__init__(self, left.label+right.label, left.freq+right.freq)
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+
+        return Node.__str__(self) + " = " + str(self.left) + ", " + str(self.right)
+
+
+# Support for priority queue
+# XXX No muy pythonista!
+def remove_lowest(q):
+
+    fmin = 1.0
+    pos = -1
+    
+    for n,k in zip(q, range(len(q))):
+        if n.freq < fmin:
+            fmin = n.freq
+            pos = k
         
+    return q[pos], q[:pos] + q[pos+1:]
+
+    
 
 def huffcode(freqdic):
     '''
@@ -34,22 +57,31 @@ def huffcode(freqdic):
     from Prof. Sprenkle's slide #38
     '''
 
-    # Create a leaf node for each symbol, labeled by its frequency, and add to a queue
-    # https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value
-    q = [LeafNode(label, freq) for label, freq in sorted(freqdic.items(), key=operator.itemgetter(1))]
+    # 1. Create a leaf node for each symbol, labeled by its frequency, and add to a queue
+    q = [LeafNode(label, freqdic[label]) for label in freqdic.keys()]
 
-    # While there is more than one node in the queue
+    for n in q:
+        print(n)
+    print("")
+
+    # 2. While there is more than one node in the queue
     while len(q) > 1:
 
-        # Remove the two nodes of lowest frequency
-        n1,n2 = q[0],q[1]
-        q = q[2:]
-
-        print(n1)
+        # a) Remove the two nodes of lowest frequency
+        node1,q = remove_lowest(q)
+        node2,q = remove_lowest(q) 
+        print(node1)
+        print(node2)
+        return
         
-        # Create a new internal node with these two nodes
-        # as children and with frequency equal to the sum
-        # of the two nodes' probabilities
+        # b) Create a new internal node with these two nodes
+        #    as children and with frequency equal to the sum
+        #    of the two nodes' probabilities
+        node = InternalNode(node1, node2)
+
+        # c) Add the new node to the queue
+        
+    
 
         break
 
