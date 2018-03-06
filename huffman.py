@@ -20,6 +20,7 @@ class LeafNode(Node):
     def __init__(self, label, freq):
         
         Node.__init__(self, label, freq)
+        self.isleaf = True
 
 class InternalNode(Node):
     
@@ -28,10 +29,15 @@ class InternalNode(Node):
         Node.__init__(self, left.label+right.label, left.freq+right.freq)
         self.left = left
         self.right = right
+        self.isleaf = False
 
     def __str__(self):
 
         return Node.__str__(self) + " = " + self.left.label + ", " + self.right.label
+
+    def isleaf(self):
+
+        return False
 
 
 # Support for priority queue
@@ -78,6 +84,26 @@ def hufftree(freqdic):
     # 3. The remaining node is the tree's root node
     return q[0]
 
+def huffcode(c, t):
+    '''
+    Looks up the character C in the Huffman-code tree T
+    '''
+
+    code = []
+
+    while (not t.isleaf):
+
+        if c in t.left.label:
+            code = [0] + code
+            t = t.left
+        else:
+            code = [1] + code
+            t = t.right
+        
+    return code
+
+
+
 def hufftext(filename):
     '''
     Builds and returns a Huffman-code dictionary built from letters in
@@ -99,7 +125,8 @@ def hufftext(filename):
     # Convert the dictionary into a Huffman-code tree
     t = hufftree(d)
 
-    print(t)
+    # Make a new dictionary from the Huffman-code tree
+    return {c:huffcode(c,t) for c in d.keys()}
 
 if __name__ == '__main__':
 
